@@ -21,12 +21,11 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
 
-    - name: Auto-Fix Project Structure & Build APK
+    - name: Auto Init & Build APK
       run: |
-        # Gradle wrapper ve temel ayarları otomatik oluştur
-        gradle wrapper
-        chmod +x gradlew
-        ./gradlew assembleDebug --continue || gradle assembleDebug
+        # Eksik Gradle wrapper ve dizin yapısını anlık oluşturur
+        gradle init --type basic --script-style kotlin || true
+        gradle assembleDebug --stacktrace || gradle build --stacktrace
 
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
@@ -35,3 +34,4 @@ jobs:
         path: |
           app/build/outputs/apk/debug/*.apk
           **/build/outputs/apk/debug/*.apk
+          **/*.apk
